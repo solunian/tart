@@ -14,15 +14,15 @@ struct CLI {
 #[derive(Subcommand)]
 enum Commands {
     #[command()]
-    /// Initialize a tart repository
+    /// initialize a tart repository
     Init {
-        /// Directory to initialize `.tart`
+        /// directory to initialize `.tart`
         directory: Option<PathBuf>,
     },
     #[command()]
-    /// Destroy a tart repository
+    /// destroy a tart repository
     Destroy {
-        /// Directory to destroy `.tart`
+        /// directory to destroy `.tart`
         directory: Option<PathBuf>,
     },
     #[command()]

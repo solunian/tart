@@ -3,7 +3,7 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 use std::{env, fs};
 
-use serde_yaml;
+use serde_json;
 
 const DOT_DIR: &str = ".tart";
 
@@ -18,7 +18,7 @@ pub fn init(dir: Option<&PathBuf>) -> Message {
 
     if actual_path.exists() {
         return format!(
-            "Tart repository already exists at `{}`",
+            "tart repository already exists at `{}`",
             &actual_path.to_str().unwrap()
         );
     }
@@ -27,23 +27,23 @@ pub fn init(dir: Option<&PathBuf>) -> Message {
         // attempts to init dir
         Ok(()) => {
             // init `.tart` contents
-            let mut file = fs::File::create(&actual_path.join("project.yaml")).unwrap();
+            let mut file = fs::File::create(&actual_path.join("project.json")).unwrap();
 
             let mut map = BTreeMap::new();
             map.insert("name".to_string(), 1.0);
             map.insert("y".to_string(), 2.0);
 
-            let yaml = serde_yaml::to_string(&map).unwrap();
-            file.write_all(yaml.as_bytes()).unwrap();
+            let json_text = serde_json::to_string(&map).unwrap();
+            file.write_all(json_text.as_bytes()).unwrap();
             // ======================================
 
             format!(
-                "Initialized tart at `{}`",
+                "initialized tart at `{}`",
                 get_absolute_path(&actual_path).unwrap()
             ) // path should exist after create_dir
         }
         Err(_) => format!(
-            "Failed to initialize tart at `{}`",
+            "failed to initialize tart at `{}`",
             &actual_path.to_str().unwrap()
         ), // path does not exist
     }
@@ -61,8 +61,8 @@ pub fn destroy(dir: Option<&PathBuf>) -> Message {
             // path exists
             match fs::remove_dir_all(&path) {
                 // attempts to remove dir
-                Ok(()) => format!("Destroyed tart at `{}`", &path),
-                Err(_) => format!("Failed to destroy tart at `{}`", &path),
+                Ok(()) => format!("destroyed tart at `{}`", &path),
+                Err(_) => format!("failed to destroy tart at `{}`", &path),
             }
         }
         Err(err_message) => err_message, // path does not exist
@@ -91,6 +91,6 @@ fn get_absolute_path(path: &PathBuf) -> Result<Message, Message> {
 
             Ok(path_str.to_string())
         }
-        Err(_) => Err(format!("Path `{}` not found", &path.to_str().unwrap())),
+        Err(_) => Err(format!("path `{}` not found", &path.to_str().unwrap())),
     }
 }
